@@ -55,10 +55,15 @@ class EventListViewState extends State<EventListView> {
                     mainAxisSpacing: 16,
                   ),
                   itemCount: events.length,
-                  itemBuilder: (ctx, idx) =>
-                      EventItem(event: events[idx], onTap: () => {
-                        // Navigation to EventDetailView
-                      }),
+                  itemBuilder: (ctx, idx) => EventItem(
+                    event: events[idx],
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => EventDetailView(event: events[idx]),
+                      ),
+                    ),
+                  ),
                 );
               },
             ),
