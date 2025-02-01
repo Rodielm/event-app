@@ -55,12 +55,10 @@ class EventListViewState extends State<EventListView> {
                     mainAxisSpacing: 16,
                   ),
                   itemCount: events.length,
-                  itemBuilder: (ctx, idx) => Card(
-                    child: TextButton(
-                      onPressed: () => {},
-                      child: Text(''),
-                    ),
-                  ),
+                  itemBuilder: (ctx, idx) =>
+                      EventItem(event: events[idx], onTap: () => {
+                        // Navigation to EventDetailView
+                      }),
                 );
               },
             ),
