@@ -1,5 +1,6 @@
 import 'package:event_desktop_app/services/event_service.dart';
 import 'package:event_desktop_app/views/event_add_view.dart';
+import 'package:event_desktop_app/widgets/event_filter_bar.dart';
 import 'package:event_desktop_app/widgets/event_item.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -25,7 +26,6 @@ class EventListViewState extends State<EventListView> {
         title: const Text('Event List'),
         actions: [
           IconButton(
-            padding: EdgeInsets.only(right: 80),
             icon: const Icon(Icons.add),
             onPressed: () {
               // Navigate to the event creation view
@@ -41,10 +41,30 @@ class EventListViewState extends State<EventListView> {
       ),
       body: Column(
         children: [
+          EventFilterBar(
+            showPastEvents: _showPastEvents,
+            favoritesOnly: _favoriteOnly,
+            sortBy: _sortBy,
+            onShowPastEventsChanged: (val) {
+              setState(() => _showPastEvents = val);
+              // onFilterChange(_showPastEvents, val);
+            },
+            onFavoritesOnlyChanged: (val) {
+              setState(() => _favoriteOnly = val);
+              // onFilterChange(_favoriteOnly, val);
+            },
+            onSortByChanged: (val) {
+              // onFilterChange(_sortBy, val);
+              setState(() => _sortBy = val);
+            },
+          ),
           Expanded(
             child: Consumer<EventService>(
               builder: (ctx, service, _) {
-                final events = service.events;
+                final events = service.getFilteredEvents(
+                    showPastEvents: _showPastEvents,
+                    favoritesOnly: _favoriteOnly,
+                    sortBy: _sortBy);
 
                 return GridView.builder(
                   padding: const EdgeInsets.all(16),
