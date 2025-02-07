@@ -42,23 +42,27 @@ class EventDetailView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final eventService = context.watch<EventService>();
+    final eventDetail = eventService.getEventById(event.id) ?? event;
     return Scaffold(
       appBar: AppBar(
-        title: Text(event.title),
+        title: Text(eventDetail.title),
         actions: [
           IconButton(
               icon: Icon(
-                event.isFavorite ? Icons.favorite : Icons.favorite_border,
+                eventDetail.isFavorite ? Icons.favorite : Icons.favorite_border,
+                color: eventDetail.isFavorite ? Colors.red : Colors.grey,
               ),
               onPressed: () =>
-                  context.read<EventService>().toggleFavorite(event.id)),
+                  // context.read<EventService>().toggleFavorite(event.id),
+                  eventService.toggleFavorite(eventDetail.id)),
           IconButton(
             icon: const Icon(Icons.edit),
             onPressed: () {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => EventEditView(event: event),
+                  builder: (context) => EventEditView(event: eventDetail),
                 ),
               );
             },
@@ -74,31 +78,31 @@ class EventDetailView extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            if (event.imagePath != null)
+            if (eventDetail.imagePath != null)
               Image.file(
-                File(event.imagePath!),
+                File(eventDetail.imagePath!),
                 height: 300,
                 width: double.infinity,
                 fit: BoxFit.cover,
               ),
             const SizedBox(height: 16),
-            Text(event.title,
+            Text(eventDetail.title,
                 style: Theme.of(context).textTheme.headlineMedium),
             const SizedBox(height: 8),
             Text(
-              'Date: ${event.date.toLocal()}'.split(' ')[0],
+              'Date: ${eventDetail.date.toLocal()}'.split(' ')[0],
               // style: const TextStyle(fontSize: 16),
               style: Theme.of(context).textTheme.titleMedium,
             ),
             const SizedBox(height: 8),
             Text(
-              'Price: \$${event.price.toStringAsFixed(2)}',
+              'Price: \$${eventDetail.price.toStringAsFixed(2)}',
               // style: const TextStyle(fontSize: 16),
               style: Theme.of(context).textTheme.titleMedium,
             ),
             const SizedBox(height: 16),
             Text(
-              event.description,
+              eventDetail.description,
               // style: const TextStyle(fontSize: 16, color: Colors.grey),
               style: Theme.of(context).textTheme.bodyLarge,
             ),
